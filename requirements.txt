@@ -1,3 +1,6 @@
 pillow==12.2.0
 rembg==2.0.75
 streamlit==1.56.0
+libgl1
+libgl1-mesa-glx
+libglib2.0-0
