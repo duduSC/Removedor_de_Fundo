@@ -36,10 +36,7 @@ if arquivo_enviado is not None:
         with st.spinner("Carregando a Inteligência Artificial e processando..."):
             try:
                 # O GRANDE TRUQUE: Importamos o rembg apenas QUANDO o botão for clicado!
-                from rembg import remove
-                
-                # Fazemos a mágica
-                imagem_sem_fundo = remove(image)
+               
                 
                 # Mostramos o resultado
                 st.success("Fundo removido com sucesso!")
