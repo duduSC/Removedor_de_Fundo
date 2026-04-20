@@ -22,39 +22,39 @@ st.write("Faça o upload de uma imagem e clique no botão para retirar o fundo!"
 arquivo_enviado = st.file_uploader(
     "Escolha uma imagem", type=["png", "jpg", "jpeg"]
 )
-
 if arquivo_enviado is not None:
+    # Lemos a imagem
+    image = Image.open(arquivo_enviado)
 
-    image = read(arquivo_enviado)
-
-    # Mostra a imagem original na tela
+    # Mostramos a imagem original
     st.image(image, caption="Sua Imagem Original", use_container_width=True)
 
-    # botão de ação.
+    # Botão de ação
     if st.button("Remover Fundo da Imagem"):
 
-        # Mostra um ícone de carregamento enquanto o computador pensa
-        with st.spinner("Carregando..."):
+        # O spinner avisa que está processando
+        with st.spinner("Carregando a Inteligência Artificial e processando..."):
             try:
-    
-                imagem_sem_fundo = process(image)
-                if imagem_sem_fundo:
-                    st.success("Fundo removido com sucesso!")
-                    st.image(
-                        imagem_sem_fundo,
-                        caption="Resultado (sem fundo)",
-                        use_container_width=True,
-                    )
-                    buffer = io.BytesIO()
-                    imagem_sem_fundo.save(buffer, format="PNG")
-                    # --- BÔNUS: Botão para baixar a nova imagem ---
-    
-                    st.download_button(
-                        label="📥 Baixar Imagem Pronta",
-                        data=buffer.getvalue(),
-                        file_name="imagem_sem_fundo.png",
-                        mime="image/png",
-                    )
+                # O GRANDE TRUQUE: Importamos o rembg apenas QUANDO o botão for clicado!
+                from rembg import remove
+                
+                # Fazemos a mágica
+                imagem_sem_fundo = remove(image)
+                
+                # Mostramos o resultado
+                st.success("Fundo removido com sucesso!")
+                st.image(imagem_sem_fundo, caption="Resultado (sem fundo)", use_container_width=True)
+                
+                # Preparamos para download
+                buffer = io.BytesIO()
+                imagem_sem_fundo.save(buffer, format="PNG")
+                
+                st.download_button(
+                    label="📥 Baixar Imagem Pronta",
+                    data=buffer.getvalue(),
+                    file_name="imagem_sem_fundo.png",
+                    mime="image/png",
+                )
+                
             except Exception as error:
-                st.error(f"Erro {error}")
-
+                st.error(f"Ocorreu um erro no processamento: {error}")
