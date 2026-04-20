@@ -1,60 +1,15 @@
 import streamlit as st
-import io  # Ferramenta do Python para lidar com arquivos na memória
-from src.remove_and_save import RemoveAndSave
 from PIL import Image
-from rembg import remove
 
-def process(imagem) -> Image:
-        try:
-            new_image = remove(imagem)
-            return new_image
-        except Exception as error:
-            print(error)
+# 1. Título de teste
+st.title("🚀 Teste de Sanidade do Servidor")
+st.write("Se você está vendo esta tela, significa que o Streamlit está a funcionar perfeitamente na nuvem!")
 
-def read(path):
-         return Image.open(path)
+# 2. Teste de Upload
+arquivo_enviado = st.file_uploader("Faça o upload de uma imagem de teste", type=["png", "jpg", "jpeg"])
 
-    # 1. Título do aplicativo
-st.title("Removedor de Fundo de Eduardo Camargo")
-st.write("Faça o upload de uma imagem e clique no botão para retirar o fundo!")
-
-# 2. Cria o componente para o usuário escolher o arquivo do computador
-arquivo_enviado = st.file_uploader(
-    "Escolha uma imagem", type=["png", "jpg", "jpeg"]
-)
 if arquivo_enviado is not None:
-    # Lemos a imagem
-    image = Image.open(arquivo_enviado)
-
-    # Mostramos a imagem original
-    st.image(image, caption="Sua Imagem Original", use_container_width=True)
-
-    # Botão de ação
-    if st.button("Remover Fundo da Imagem"):
-
-        # O spinner avisa que está processando
-        with st.spinner("Carregando a Inteligência Artificial e processando..."):
-            try:
-                # O GRANDE TRUQUE: Importamos o rembg apenas QUANDO o botão for clicado!
-                from rembg import remove
-                
-                # Fazemos a mágica
-                imagem_sem_fundo = remove(image)
-                
-                # Mostramos o resultado
-                st.success("Fundo removido com sucesso!")
-                st.image(imagem_sem_fundo, caption="Resultado (sem fundo)", use_container_width=True)
-                
-                # Preparamos para download
-                buffer = io.BytesIO()
-                imagem_sem_fundo.save(buffer, format="PNG")
-                
-                st.download_button(
-                    label="📥 Baixar Imagem Pronta",
-                    data=buffer.getvalue(),
-                    file_name="imagem_sem_fundo.png",
-                    mime="image/png",
-                )
-                
-            except Exception as error:
-                st.error(f"Ocorreu um erro no processamento: {error}")
+    # Lê e mostra a imagem
+    imagem = Image.open(arquivo_enviado)
+    st.image(imagem, caption="Upload feito com sucesso!", use_container_width=True)
+    st.success("Tudo certo com a interface e o processamento de imagens base!")
